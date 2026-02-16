@@ -4,177 +4,127 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-adsense-account" content="ca-pub-6025469498161210" />
-    <meta
-      name="description"
-      content="로또 번호 생성 원리, 확률 정보, 책임 있는 이용 가이드까지 제공하는 로또 6/45 정보형 추첨 도구"
-    />
-    <title>로또 번호 추첨기 | 확률 가이드와 책임 있는 이용 안내</title>
+    <meta name="description" content="최근 2주 한국 주식시장의 일자별 상승 30개, 하락 30개 종목 분석 블로그" />
+    <title>K-Stock Daily Pulse | 최근 2주 한국 주식 상승·하락 30 분석</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6025469498161210"
-      crossorigin="anonymous"
-    ></script>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6025469498161210" crossorigin="anonymous"></script>
   </head>
   <body>
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="#top">K-Lotto Insight</a>
-        <nav class="site-nav" aria-label="주요 메뉴">
-          <a href="#draw">번호 추첨</a>
-          <a href="#guide">이용 가이드</a>
-          <a href="#faq">자주 묻는 질문</a>
-          <a href="#policy">운영 정책</a>
-          <a href="#contact">제휴 문의</a>
-        </nav>
-      </div>
-    </header>
+    
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">K-Stock Daily Pulse</a>
+    <nav class="site-nav" aria-label="주요 메뉴">
+      <a href="#reports">최근 2주 리포트</a>
+      <a href="/privacy.html">개인정보처리방침</a>
+      <a href="/terms.html">이용약관</a>
+    </nav>
+  </div>
+</header>
 
-    <main id="top" class="app">
-      <section class="hero">
-        <p class="kicker">K-Lotto 6/45</p>
-        <h1>로또 번호 추첨기</h1>
-        <p class="desc">
-          번호 생성 기능만 제공하지 않습니다. 번호 생성 원리, 확률의 의미, 책임 있는 이용 방법까지 한 페이지에서
-          확인할 수 있도록 구성했습니다.
-        </p>
-      </section>
+<main class="app">
+  <section class="hero">
+    <p class="kicker">KOREA STOCK BLOG</p>
+    <h1>매일 한국 주식 상승 30 / 하락 30 분석</h1>
+    <p class="desc">최근 2주(최근 10거래일) 장마감 데이터를 기준으로, 하루에 1페이지씩 요약 리포트를 제공합니다.</p>
+    <p class="meta-line">페이지 구성: 일자별 상승 30 · 하락 30 · 거래 집중도 · 해석 요약</p>
+  </section>
 
-      <section id="draw" class="panel" aria-labelledby="draw-title">
-        <h2 id="draw-title">번호 추첨</h2>
-        <p class="section-desc">1부터 45까지 중복 없이 6개 번호를 무작위로 추출하고 오름차순으로 정렬합니다.</p>
-        <div class="board" aria-live="polite">
-          <div id="numbers" class="numbers"></div>
-        </div>
+  <section id="reports" class="panel">
+    <h2>최근 2주 일자별 페이지</h2>
+    <div class="cards">
+      
+<article class="report-card">
+  <h3><a href="/reports/2026-02-13.html">2026-02-13 주식장 분석</a></h3>
+  <p>상승 대표: SK증권우 (29.96%)</p>
+  <p>하락 대표: 코퍼스코리아 (-29.97%)</p>
+  <a class="read-link" href="/reports/2026-02-13.html">하루치 상세 보기</a>
+</article>
 
-        <div class="actions">
-          <button id="generate-btn" type="button">번호 다시 추첨하기</button>
-        </div>
+<article class="report-card">
+  <h3><a href="/reports/2026-02-12.html">2026-02-12 주식장 분석</a></h3>
+  <p>상승 대표: SKAI (30.00%)</p>
+  <p>하락 대표: 비엘팜텍 (-21.28%)</p>
+  <a class="read-link" href="/reports/2026-02-12.html">하루치 상세 보기</a>
+</article>
 
-        <p id="round-note" class="note">아직 추첨 전입니다.</p>
-      </section>
+<article class="report-card">
+  <h3><a href="/reports/2026-02-11.html">2026-02-11 주식장 분석</a></h3>
+  <p>상승 대표: 우리기술 (30.00%)</p>
+  <p>하락 대표: 대호에이엘 (-27.84%)</p>
+  <a class="read-link" href="/reports/2026-02-11.html">하루치 상세 보기</a>
+</article>
 
-      <section id="guide" class="panel" aria-labelledby="guide-title">
-        <h2 id="guide-title">이용 가이드</h2>
-        <div class="copy-grid">
-          <article>
-            <h3>1. 번호 생성 원리</h3>
-            <p>
-              이 도구는 브라우저의 난수 생성 함수를 사용해 1~45 범위에서 중복 없이 6개를 선택합니다. 특정 번호를
-              우대하거나 배제하는 로직은 포함하지 않으며, 매 추첨은 이전 결과와 독립적으로 동작합니다.
-            </p>
-          </article>
-          <article>
-            <h3>2. 확률 이해하기</h3>
-            <p>
-              로또는 확률형 상품입니다. 과거 당첨 번호 패턴을 참고하더라도 미래 결과를 보장하지 않으며, 번호 추천은
-              오락 목적의 보조 도구로만 활용하는 것이 적절합니다.
-            </p>
-          </article>
-          <article>
-            <h3>3. 책임 있는 이용</h3>
-            <p>
-              예산 한도를 사전에 정하고, 손실을 만회하기 위한 추가 구매는 피하세요. 본 사이트는 투자 조언이나 수익
-              보장을 제공하지 않으며, 이용자의 건전한 소비를 최우선 원칙으로 합니다.
-            </p>
-          </article>
-          <article>
-            <h3>4. 정보 업데이트 정책</h3>
-            <p>
-              콘텐츠는 사용자 피드백과 정책 변화에 맞춰 정기 점검합니다. 최신 업데이트 일시는 페이지 하단에 표시하며,
-              정책 문의는 제휴 문의 폼으로 접수받습니다.
-            </p>
-          </article>
-        </div>
-      </section>
+<article class="report-card">
+  <h3><a href="/reports/2026-02-10.html">2026-02-10 주식장 분석</a></h3>
+  <p>상승 대표: 삼화페인트 (30.00%)</p>
+  <p>하락 대표: 대호에이엘 (-30.00%)</p>
+  <a class="read-link" href="/reports/2026-02-10.html">하루치 상세 보기</a>
+</article>
 
-      <section id="faq" class="panel" aria-labelledby="faq-title">
-        <h2 id="faq-title">자주 묻는 질문</h2>
-        <div class="faq-list">
-          <details>
-            <summary>이 사이트는 당첨을 보장하나요?</summary>
-            <p>아니요. 본 사이트는 무작위 번호 생성과 정보 제공 기능만 제공하며, 어떤 당첨도 보장하지 않습니다.</p>
-          </details>
-          <details>
-            <summary>번호는 어떻게 추출되나요?</summary>
-            <p>1~45 범위의 정수 중 중복 없이 6개를 선택한 뒤 오름차순으로 보여줍니다.</p>
-          </details>
-          <details>
-            <summary>개인정보는 어떤 항목을 수집하나요?</summary>
-            <p>
-              제휴 문의 폼에서 이름, 이메일, 회사명, 문의내용을 수집하며, 문의 대응 목적 외에는 사용하지 않습니다.
-            </p>
-          </details>
-          <details>
-            <summary>광고 노출 기준은 무엇인가요?</summary>
-            <p>
-              콘텐츠 이용 흐름을 방해하지 않는 위치를 우선 고려하며, 오해를 유발하는 클릭 유도 문구는 사용하지
-              않습니다.
-            </p>
-          </details>
-        </div>
-      </section>
+<article class="report-card">
+  <h3><a href="/reports/2026-02-09.html">2026-02-09 주식장 분석</a></h3>
+  <p>상승 대표: 비아이매트릭스 (30.00%)</p>
+  <p>하락 대표: 이엠앤아이 (-20.99%)</p>
+  <a class="read-link" href="/reports/2026-02-09.html">하루치 상세 보기</a>
+</article>
 
-      <section id="policy" class="panel" aria-labelledby="policy-title">
-        <h2 id="policy-title">운영 정책</h2>
-        <ul class="policy-list">
-          <li>콘텐츠 우선 원칙: 광고보다 정보 제공과 사용자 편의성을 우선합니다.</li>
-          <li>투명성 원칙: 확률형 콘텐츠의 특성과 한계를 명확히 고지합니다.</li>
-          <li>개인정보 최소 수집: 제휴 문의 처리에 필요한 항목만 수집합니다.</li>
-          <li>정책 준수: Google AdSense 및 관련 서비스 정책을 준수합니다.</li>
-        </ul>
-        <p class="policy-links">
-          세부 문서:
-          <a href="/privacy.html">개인정보처리방침</a>
-          <span aria-hidden="true">|</span>
-          <a href="/terms.html">이용약관</a>
-        </p>
-      </section>
+<article class="report-card">
+  <h3><a href="/reports/2026-02-06.html">2026-02-06 주식장 분석</a></h3>
+  <p>상승 대표: 코데즈컴바인 (29.95%)</p>
+  <p>하락 대표: 코이즈 (-29.87%)</p>
+  <a class="read-link" href="/reports/2026-02-06.html">하루치 상세 보기</a>
+</article>
 
-      <section id="contact" class="panel contact-section" aria-labelledby="contact-title">
-        <h2 id="contact-title">제휴 문의</h2>
-        <p class="contact-desc">운영 제휴, 콘텐츠 협업, 광고 운영 제안은 아래 폼으로 보내주세요.</p>
-        <form
-          id="partner-form"
-          class="partner-form"
-          action="https://formspree.io/f/xbdaoneo"
-          method="POST"
-        >
-          <label for="name">이름</label>
-          <input id="name" name="name" type="text" required />
+<article class="report-card">
+  <h3><a href="/reports/2026-02-05.html">2026-02-05 주식장 분석</a></h3>
+  <p>상승 대표: 모두투어 (29.98%)</p>
+  <p>하락 대표: 삼성스팩13호 (-29.78%)</p>
+  <a class="read-link" href="/reports/2026-02-05.html">하루치 상세 보기</a>
+</article>
 
-          <label for="email">이메일</label>
-          <input id="email" name="email" type="email" required />
+<article class="report-card">
+  <h3><a href="/reports/2026-02-04.html">2026-02-04 주식장 분석</a></h3>
+  <p>상승 대표: 선익시스템 (30.00%)</p>
+  <p>하락 대표: 쎄노텍 (-16.42%)</p>
+  <a class="read-link" href="/reports/2026-02-04.html">하루치 상세 보기</a>
+</article>
 
-          <label for="company">회사명</label>
-          <input id="company" name="company" type="text" required />
+<article class="report-card">
+  <h3><a href="/reports/2026-02-03.html">2026-02-03 주식장 분석</a></h3>
+  <p>상승 대표: 유디엠텍 (30.00%)</p>
+  <p>하락 대표: 수성웹툰 (-28.99%)</p>
+  <a class="read-link" href="/reports/2026-02-03.html">하루치 상세 보기</a>
+</article>
 
-          <label for="message">문의 내용</label>
-          <textarea id="message" name="message" rows="4" required></textarea>
+<article class="report-card">
+  <h3><a href="/reports/2026-02-02.html">2026-02-02 주식장 분석</a></h3>
+  <p>상승 대표: 코아시아씨엠 (30.00%)</p>
+  <p>하락 대표: 뷰웍스 (-16.28%)</p>
+  <a class="read-link" href="/reports/2026-02-02.html">하루치 상세 보기</a>
+</article>
 
-          <input type="hidden" name="_subject" value="신규 제휴 문의" />
-          <button id="partner-submit-btn" type="submit">문의 보내기</button>
-        </form>
-        <p id="partner-status" class="partner-status" aria-live="polite"></p>
-      </section>
+    </div>
+  </section>
 
-      <footer class="site-footer">
-        <p>운영 원칙: 책임 있는 이용, 정확한 안내, 정책 준수</p>
-        <p>
-          <a href="/privacy.html">개인정보처리방침</a>
-          <span aria-hidden="true">|</span>
-          <a href="/terms.html">이용약관</a>
-        </p>
-        <p id="updated-at">최종 업데이트: -</p>
-      </footer>
-    </main>
+  <section class="panel">
+    <h2>안내</h2>
+    <ul class="policy-list">
+      <li>리포트는 장마감 데이터 기반 자동 생성입니다.</li>
+      <li>종목 코멘트는 등락률과 거래대금 강도를 기준으로 한 요약 텍스트입니다.</li>
+      <li>본 사이트는 투자 권유를 제공하지 않습니다.</li>
+    </ul>
+  </section>
 
-    <script src="main.js"></script>
+  <footer class="site-footer">
+    <p>데이터 출처: KRX 일별 시세(수집 시점 기준)</p>
+    <p><a href="/privacy.html">개인정보처리방침</a> | <a href="/terms.html">이용약관</a></p>
+    <p>최종 생성일: 2026-02-16</p>
+  </footer>
+</main>
+
   </body>
 </html>
