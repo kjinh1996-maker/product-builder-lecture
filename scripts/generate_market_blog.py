@@ -25,6 +25,31 @@ ADSENSE_CLIENT = "ca-pub-6025469498161210"
 NEWS_CACHE: Dict[str, List[Dict[str, str]]] = {}
 NEWS_LOOKBACK_DAYS = 3
 NEWS_TOP_LIMIT = 5
+MAX_NEWS_PER_STOCK = 3
+TRUSTED_NEWS_SOURCES = {
+    "연합뉴스",
+    "뉴시스",
+    "머니투데이",
+    "한국경제",
+    "매일경제",
+    "서울경제",
+    "이데일리",
+    "아시아경제",
+    "파이낸셜뉴스",
+    "한국경제TV",
+    "뉴스1",
+    "조선비즈",
+    "전자신문",
+    "헤럴드경제",
+    "딜사이트",
+    "Chosunbiz",
+}
+SOURCE_ALIAS = {
+    "chosunbiz": "Chosunbiz",
+    "조선비즈": "Chosunbiz",
+    "매경닷컴": "매일경제",
+    "mk.co.kr": "매일경제",
+}
 
 
 def fmt_int(v: float) -> str:
@@ -103,14 +128,76 @@ def fetch_related_news(stock_name: str, report_day: dt.date, direction: str) -> 
         NEWS_CACHE[cache_key] = []
         return []
 
-    items = []
-    for item in root.findall("./channel/item")[:3]:
+    def normalize_source_name(source: str) -> str:
+        s = source.strip()
+        if not s:
+            return ""
+        return SOURCE_ALIAS.get(s.lower(), SOURCE_ALIAS.get(s, s))
+
+    def split_title_source(title: str) -> tuple[str, str]:
+        # Google News RSS title is often "<headline> - <publisher>"
+        if " - " in title:
+            h, src = title.rsplit(" - ", 1)
+            return h.strip(), src.strip()
+        return title.strip(), ""
+
+    direction_words = {"up": ["급등", "상승", "호재", "실적", "수주", "계약"], "down": ["급락", "하락", "악재", "리스크", "우려", "적자"]}
+    candidates = []
+    for item in root.findall("./channel/item"):
         title = item.findtext("title", "").strip()
         link = item.findtext("link", "").strip()
         pub_date = item.findtext("pubDate", "").strip()
+        source_el = item.find("source")
+        source = source_el.text.strip() if source_el is not None and source_el.text else ""
         if not title or not link:
             continue
-        items.append({"title": title, "link": link, "pub_date": pub_date})
+
+        headline, suffix_source = split_title_source(title)
+        source = normalize_source_name(source or suffix_source)
+        score = 0
+        if stock_name in headline:
+            score += 4
+        if any(w in headline for w in direction_words[direction]):
+            score += 2
+        if source in TRUSTED_NEWS_SOURCES:
+            score += 3
+
+        candidates.append(
+            {
+                "title": headline,
+                "link": link,
+                "pub_date": pub_date,
+                "source": source,
+                "score": score,
+            }
+        )
+
+    # 우선순위 정렬 후 중복 헤드라인 제거
+    candidates.sort(key=lambda x: x["score"], reverse=True)
+    seen_titles = set()
+    items = []
+    for c in candidates:
+        norm = c["title"].strip().lower()
+        if norm in seen_titles:
+            continue
+        seen_titles.add(norm)
+        # 화이트리스트 매체만 통과
+        if c["source"] not in TRUSTED_NEWS_SOURCES:
+            continue
+        # 지나치게 연관성이 낮은 뉴스는 제외
+        if c["score"] < 2:
+            continue
+        items.append(
+            {
+                "title": c["title"],
+                "link": c["link"],
+                "pub_date": c["pub_date"],
+                "source": c["source"],
+            }
+        )
+        if len(items) >= MAX_NEWS_PER_STOCK:
+            break
+
     NEWS_CACHE[cache_key] = items
     return items
 
@@ -138,7 +225,9 @@ def build_deep_cards(
             headline = news_items[0]["title"]
             reason = f"{base_reason} 관련 기사에서는 \"{headline}\" 이슈가 함께 관찰됩니다."
             links = "".join(
-                f"<li><a href=\"{html.escape(n['link'])}\" target=\"_blank\" rel=\"noopener\">{html.escape(n['title'])}</a></li>"
+                f"<li><a href=\"{html.escape(n['link'])}\" target=\"_blank\" rel=\"noopener\">{html.escape(n['title'])}</a>"
+                + (f" <span class=\"news-source\">({html.escape(n['source'])})</span>" if n.get("source") else "")
+                + "</li>"
                 for n in news_items
             )
             news_html = f"<ul class=\"news-links\">{links}</ul>"

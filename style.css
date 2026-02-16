@@ -322,6 +322,12 @@ tbody tr:nth-child(even) {
   text-decoration: underline;
 }
 
+.news-source {
+  color: #5d6a80;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
 .site-footer {
   margin-top: 18px;
   border-top: 1px dashed #d5deed;
