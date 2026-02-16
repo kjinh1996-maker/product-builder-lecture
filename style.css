@@ -238,6 +238,67 @@ h1 {
   overflow-x: auto;
 }
 
+.mobile-list {
+  display: none;
+}
+
+.stock-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 190px;
+}
+
+.rate-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.rate-up {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.rate-down {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.mobile-item {
+  border: 1px solid #dbe5f3;
+  border-radius: 10px;
+  background: #fbfdff;
+  padding: 10px;
+}
+
+.mobile-item + .mobile-item {
+  margin-top: 8px;
+}
+
+.mobile-top {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-meta {
+  margin: 6px 0 0;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.mobile-comment {
+  margin: 6px 0 0;
+  color: #334155;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
 table {
   width: 100%;
   min-width: 980px;
@@ -368,5 +429,14 @@ tbody tr:nth-child(even) {
 
   .metric-grid {
     grid-template-columns: 1fr;
+  }
+
+  .table-wrap {
+    display: none;
+  }
+
+  .mobile-list {
+    display: block;
+    margin-top: 10px;
   }
 }

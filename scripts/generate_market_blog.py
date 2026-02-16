@@ -310,22 +310,38 @@ def build_day_report(
     total_turnover = float(df["거래대금"].sum())
     top_focus = float(gainers.head(5)["거래대금"].sum()) / total_turnover * 100 if total_turnover else 0.0
 
-    def to_rows(sub: pd.DataFrame) -> str:
+    def to_rows(sub: pd.DataFrame, direction: str) -> str:
         rows = []
         for i, (_, r) in enumerate(sub.iterrows(), start=1):
+            rate = float(r["등락률"])
+            rate_cls = "rate-up" if direction == "up" else "rate-down"
             rows.append(
                 "<tr>"
                 f"<td>{i}</td>"
-                f"<td>{r['종목명']}</td>"
+                f"<td><div class=\"stock-main\">{r['종목명']} <span class=\"rate-badge {rate_cls}\">{rate:.2f}%</span></div></td>"
                 f"<td>{r['티커']}</td>"
                 f"<td>{fmt_int(r['종가'])}</td>"
-                f"<td>{float(r['등락률']):.2f}%</td>"
                 f"<td>{fmt_int(r['거래량'])}</td>"
                 f"<td>{fmt_int(r['거래대금'])}</td>"
                 f"<td>{r['코멘트']}</td>"
                 "</tr>"
             )
         return "\n".join(rows)
+
+    def to_mobile_cards(sub: pd.DataFrame, direction: str) -> str:
+        cards = []
+        for i, (_, r) in enumerate(sub.iterrows(), start=1):
+            rate = float(r["등락률"])
+            rate_cls = "rate-up" if direction == "up" else "rate-down"
+            cards.append(
+                "<article class=\"mobile-item\">"
+                f"<p class=\"mobile-top\"><strong>{i}. {r['종목명']}</strong> <span class=\"rate-badge {rate_cls}\">{rate:.2f}%</span></p>"
+                f"<p class=\"mobile-meta\">티커 {r['티커']} · 종가 {fmt_int(r['종가'])}원</p>"
+                f"<p class=\"mobile-meta\">거래량 {fmt_int(r['거래량'])} · 거래대금 {fmt_int(r['거래대금'])}원</p>"
+                f"<p class=\"mobile-comment\">{r['코멘트']}</p>"
+                "</article>"
+            )
+        return "\n".join(cards)
 
     prev_link = f"/reports/{prev_day.strftime('%Y-%m-%d')}.html" if prev_day else "#"
     next_link = f"/reports/{next_day.strftime('%Y-%m-%d')}.html" if next_day else "#"
@@ -362,12 +378,15 @@ def build_day_report(
     <div class=\"table-wrap\">
       <table>
         <thead>
-          <tr><th>순위</th><th>종목명</th><th>티커</th><th>종가(원)</th><th>등락률</th><th>거래량</th><th>거래대금(원)</th><th>해석</th></tr>
+          <tr><th>순위</th><th>종목명/등락률</th><th>티커</th><th>종가(원)</th><th>거래량</th><th>거래대금(원)</th><th>해석</th></tr>
         </thead>
         <tbody>
-          {to_rows(gainers)}
+          {to_rows(gainers, "up")}
         </tbody>
       </table>
+    </div>
+    <div class=\"mobile-list\">
+      {to_mobile_cards(gainers, "up")}
     </div>
   </section>
 
@@ -376,12 +395,15 @@ def build_day_report(
     <div class=\"table-wrap\">
       <table>
         <thead>
-          <tr><th>순위</th><th>종목명</th><th>티커</th><th>종가(원)</th><th>등락률</th><th>거래량</th><th>거래대금(원)</th><th>해석</th></tr>
+          <tr><th>순위</th><th>종목명/등락률</th><th>티커</th><th>종가(원)</th><th>거래량</th><th>거래대금(원)</th><th>해석</th></tr>
         </thead>
         <tbody>
-          {to_rows(losers)}
+          {to_rows(losers, "down")}
         </tbody>
       </table>
+    </div>
+    <div class=\"mobile-list\">
+      {to_mobile_cards(losers, "down")}
     </div>
   </section>
 
