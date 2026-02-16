@@ -299,6 +299,8 @@ def build_sitemap(report_paths: List[str]) -> str:
 
 def main() -> None:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    for old in REPORT_DIR.glob("*.html"):
+        old.unlink()
 
     today = dt.date.today()
     start = today - dt.timedelta(days=20)
