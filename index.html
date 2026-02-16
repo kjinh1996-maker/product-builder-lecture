@@ -27,6 +27,33 @@
       </div>
 
       <p id="round-note" class="note">아직 추첨 전입니다.</p>
+
+      <section class="contact-section">
+        <h2>제휴 문의</h2>
+        <p class="contact-desc">간단히 정보 남겨주시면 확인 후 회신드리겠습니다.</p>
+        <form
+          id="partner-form"
+          class="partner-form"
+          action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+          method="POST"
+        >
+          <label for="name">이름</label>
+          <input id="name" name="name" type="text" required />
+
+          <label for="email">이메일</label>
+          <input id="email" name="email" type="email" required />
+
+          <label for="company">회사명</label>
+          <input id="company" name="company" type="text" required />
+
+          <label for="message">문의 내용</label>
+          <textarea id="message" name="message" rows="4" required></textarea>
+
+          <input type="hidden" name="_subject" value="신규 제휴 문의" />
+          <button id="partner-submit-btn" type="submit">문의 보내기</button>
+        </form>
+        <p id="partner-status" class="partner-status" aria-live="polite"></p>
+      </section>
     </main>
 
     <script src="main.js"></script>

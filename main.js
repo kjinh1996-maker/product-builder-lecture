@@ -1,6 +1,9 @@
 const numbersEl = document.getElementById('numbers');
 const generateBtn = document.getElementById('generate-btn');
 const roundNoteEl = document.getElementById('round-note');
+const partnerForm = document.getElementById('partner-form');
+const partnerStatusEl = document.getElementById('partner-status');
+const partnerSubmitBtn = document.getElementById('partner-submit-btn');
 
 let drawCount = 0;
 
@@ -46,3 +49,40 @@ function runDraw() {
 generateBtn.addEventListener('click', runDraw);
 
 runDraw();
+
+partnerForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const endpoint = partnerForm.action;
+  if (!endpoint || endpoint.includes('YOUR_FORMSPREE_ID')) {
+    partnerStatusEl.textContent = 'Formspree 폼 ID를 먼저 입력해 주세요.';
+    partnerStatusEl.style.color = '#b91c1c';
+    return;
+  }
+
+  partnerSubmitBtn.disabled = true;
+  partnerStatusEl.textContent = '전송 중입니다...';
+  partnerStatusEl.style.color = '#374151';
+
+  try {
+    const formData = new FormData(partnerForm);
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('submit_failed');
+    }
+
+    partnerForm.reset();
+    partnerStatusEl.textContent = '문의가 접수되었습니다. 빠르게 확인 후 연락드리겠습니다.';
+    partnerStatusEl.style.color = '#065f46';
+  } catch (error) {
+    partnerStatusEl.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+    partnerStatusEl.style.color = '#b91c1c';
+  } finally {
+    partnerSubmitBtn.disabled = false;
+  }
+});

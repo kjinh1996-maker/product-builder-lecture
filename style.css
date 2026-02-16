@@ -135,6 +135,64 @@ button:active {
   color: #374151;
 }
 
+.contact-section {
+  margin-top: 28px;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #fde68a;
+  border-radius: 18px;
+  padding: 20px 16px;
+}
+
+.contact-section h2 {
+  margin: 0;
+  font-family: 'Do Hyeon', sans-serif;
+  font-size: 1.8rem;
+  color: #92400e;
+}
+
+.contact-desc {
+  margin: 8px 0 16px;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.partner-form {
+  display: grid;
+  gap: 8px;
+}
+
+.partner-form label {
+  font-weight: 700;
+  color: #374151;
+  font-size: 0.92rem;
+}
+
+.partner-form input,
+.partner-form textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.partner-form textarea {
+  resize: vertical;
+}
+
+.partner-form button {
+  margin-top: 4px;
+}
+
+.partner-status {
+  margin: 10px 0 0;
+  min-height: 1.4em;
+  color: #065f46;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
 @keyframes pop-in {
   to {
     opacity: 1;
