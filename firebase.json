@@ -3,6 +3,15 @@
     "public": ".",
     "ignore": [
       "firebase.json",
+      ".git/**",
+      ".venv/**",
+      ".firebase/**",
+      ".idx/**",
+      ".vscode/**",
+      "scripts/**",
+      "GEMINI.md",
+      "blueprint.md",
+      "main.js",
       "**/.*",
       "**/node_modules/**"
     ],
