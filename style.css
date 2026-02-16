@@ -271,6 +271,16 @@ button:active {
   color: #374151;
 }
 
+.policy-links {
+  margin: 12px 0 0;
+  color: #374151;
+}
+
+.policy-links a {
+  color: #7c2d12;
+  font-weight: 700;
+}
+
 .contact-desc {
   margin: 8px 0 12px;
   color: #4b5563;
@@ -319,6 +329,11 @@ button:active {
   color: #4b5563;
   font-size: 0.9rem;
   text-align: center;
+}
+
+.site-footer a {
+  color: #7c2d12;
+  font-weight: 700;
 }
 
 @keyframes pop-in {
