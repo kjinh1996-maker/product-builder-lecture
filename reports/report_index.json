@@ -1,0 +1,102 @@
+{
+  "2026-02-02": {
+    "date": "2026-02-02",
+    "path": "reports/2026-02-02.html",
+    "strong": "코아시아씨엠 (30.00%)",
+    "weak": "뷰웍스 (-16.28%)",
+    "advance": 390,
+    "decline": 2214,
+    "flat": 59,
+    "top_focus": 1.6
+  },
+  "2026-02-03": {
+    "date": "2026-02-03",
+    "path": "reports/2026-02-03.html",
+    "strong": "유디엠텍 (30.00%)",
+    "weak": "수성웹툰 (-28.99%)",
+    "advance": 2213,
+    "decline": 368,
+    "flat": 85,
+    "top_focus": 1.32
+  },
+  "2026-02-04": {
+    "date": "2026-02-04",
+    "path": "reports/2026-02-04.html",
+    "strong": "선익시스템 (30.00%)",
+    "weak": "쎄노텍 (-16.42%)",
+    "advance": 1788,
+    "decline": 760,
+    "flat": 113,
+    "top_focus": 0.3
+  },
+  "2026-02-05": {
+    "date": "2026-02-05",
+    "path": "reports/2026-02-05.html",
+    "strong": "모두투어 (29.98%)",
+    "weak": "삼성스팩13호 (-29.78%)",
+    "advance": 733,
+    "decline": 1815,
+    "flat": 109,
+    "top_focus": 0.23
+  },
+  "2026-02-06": {
+    "date": "2026-02-06",
+    "path": "reports/2026-02-06.html",
+    "strong": "코데즈컴바인 (29.95%)",
+    "weak": "코이즈 (-29.87%)",
+    "advance": 584,
+    "decline": 1970,
+    "flat": 101,
+    "top_focus": 1.16
+  },
+  "2026-02-09": {
+    "date": "2026-02-09",
+    "path": "reports/2026-02-09.html",
+    "strong": "비아이매트릭스 (30.00%)",
+    "weak": "이엠앤아이 (-20.99%)",
+    "advance": 2068,
+    "decline": 486,
+    "flat": 104,
+    "top_focus": 0.37
+  },
+  "2026-02-10": {
+    "date": "2026-02-10",
+    "path": "reports/2026-02-10.html",
+    "strong": "삼화페인트 (30.00%)",
+    "weak": "대호에이엘 (-30.00%)",
+    "advance": 1700,
+    "decline": 862,
+    "flat": 104,
+    "top_focus": 0.82
+  },
+  "2026-02-11": {
+    "date": "2026-02-11",
+    "path": "reports/2026-02-11.html",
+    "strong": "우리기술 (30.00%)",
+    "weak": "대호에이엘 (-27.84%)",
+    "advance": 1341,
+    "decline": 1174,
+    "flat": 137,
+    "top_focus": 1.78
+  },
+  "2026-02-12": {
+    "date": "2026-02-12",
+    "path": "reports/2026-02-12.html",
+    "strong": "SKAI (30.00%)",
+    "weak": "비엘팜텍 (-21.28%)",
+    "advance": 1508,
+    "decline": 1013,
+    "flat": 144,
+    "top_focus": 0.8
+  },
+  "2026-02-13": {
+    "date": "2026-02-13",
+    "path": "reports/2026-02-13.html",
+    "strong": "SK증권우 (29.96%)",
+    "weak": "코퍼스코리아 (-29.97%)",
+    "advance": 735,
+    "decline": 1824,
+    "flat": 106,
+    "top_focus": 1.87
+  }
+}

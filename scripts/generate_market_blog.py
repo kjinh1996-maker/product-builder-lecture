@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import datetime as dt
+import json
+import re
 from pathlib import Path
 from typing import List, Dict
 
@@ -11,6 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 REPORT_DIR = ROOT / "reports"
 INDEX_FILE = ROOT / "index.html"
 SITEMAP_FILE = ROOT / "sitemap.xml"
+REPORT_META_FILE = REPORT_DIR / "report_index.json"
 
 SITE_NAME = "K-Stock Daily Pulse"
 SITE_URL = "https://pre-visual.web.app"
@@ -66,7 +69,7 @@ def page_template(title: str, description: str, body: str) -> str:
     <title>{title}</title>
     <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />
     <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />
-    <link href=\"https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;600;700&display=swap\" rel=\"stylesheet\" />
+    <link href=\"https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap\" rel=\"stylesheet\" />
     <link rel=\"stylesheet\" href=\"/style.css\" />
     <script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={ADSENSE_CLIENT}\" crossorigin=\"anonymous\"></script>
   </head>
@@ -130,7 +133,7 @@ def build_day_report(day: dt.date, rank: int, total_days: int, prev_day: dt.date
   <div class=\"header-inner\">
     <a class=\"brand\" href=\"/\">{SITE_NAME}</a>
     <nav class=\"site-nav\" aria-label=\"리포트 메뉴\">
-      <a href=\"/\">최근 2주 목록</a>
+      <a href=\"/\">리포트 허브</a>
       <a href=\"/privacy.html\">개인정보처리방침</a>
       <a href=\"/terms.html\">이용약관</a>
     </nav>
@@ -140,8 +143,8 @@ def build_day_report(day: dt.date, rank: int, total_days: int, prev_day: dt.date
 <main class=\"app\">
   <section class=\"hero\">
     <p class=\"kicker\">KOREA MARKET DAILY REPORT</p>
-    <h1>{label} 상승/하락 30 종목 분석</h1>
-    <p class=\"desc\">최근 2주 리포트 중 {rank}/{total_days} 페이지. 전 종목 일일 등락률 기준으로 상위/하위 30개를 정리했습니다.</p>
+    <h1>{label} KOSPI/KOSDAQ 데일리 마켓 브리프</h1>
+    <p class=\"desc\">누적 아카이브 기준 {rank}/{total_days} 페이지. 당일 전체 종목의 등락률 분포에서 상승/하락 상위 30개를 추출해 정리했습니다.</p>
     <p class=\"meta-line\">상승 {adv}개 · 하락 {dec}개 · 보합 {flat}개 · 상위 5개 거래대금 집중도 {top_focus:.2f}%</p>
     <div class=\"pager\">
       <a class=\"pager-link{prev_class}\" href=\"{prev_link}\">이전 거래일</a>
@@ -179,7 +182,7 @@ def build_day_report(day: dt.date, rank: int, total_days: int, prev_day: dt.date
   </section>
 
   <section class=\"panel\">
-    <h2>해석 요약</h2>
+    <h2>데일리 해석</h2>
     <ul class=\"policy-list\">
       <li>당일 등락률은 장마감 기준이며 실시간 변동과 다를 수 있습니다.</li>
       <li>상승/하락 종목은 시장 전체 흐름과 개별 이슈의 영향을 동시에 받습니다.</li>
@@ -209,29 +212,51 @@ def build_day_report(day: dt.date, rank: int, total_days: int, prev_day: dt.date
         "html": html,
         "strong": f"{strongest['종목명']} ({float(strongest['등락률']):.2f}%)",
         "weak": f"{weakest['종목명']} ({float(weakest['등락률']):.2f}%)",
+        "advance": adv,
+        "decline": dec,
+        "flat": flat,
+        "top_focus": round(top_focus, 2),
     }
 
 
 def build_index(reports: List[Dict[str, str]]) -> str:
     cards = []
-    for r in sorted(reports, key=lambda x: x["date"], reverse=True):
+    sorted_reports = sorted(reports, key=lambda x: x["date"], reverse=True)
+    latest = sorted_reports[0] if sorted_reports else None
+
+    for r in sorted_reports:
         cards.append(
             f"""
 <article class=\"report-card\">
   <h3><a href=\"/{r['path']}\">{r['date']} 주식장 분석</a></h3>
   <p>상승 대표: {r['strong']}</p>
   <p>하락 대표: {r['weak']}</p>
+  <p>상승/하락/보합: {r.get('advance', '-')} / {r.get('decline', '-')} / {r.get('flat', '-')}</p>
   <a class=\"read-link\" href=\"/{r['path']}\">하루치 상세 보기</a>
 </article>
 """
         )
+
+    latest_box = ""
+    if latest:
+        latest_box = f"""
+  <section class=\"panel metrics-panel\">
+    <h2>최신 리포트 핵심 지표 ({latest['date']})</h2>
+    <div class=\"metric-grid\">
+      <div class=\"metric-card\"><span>상승 종목</span><strong>{latest.get('advance', '-')}</strong></div>
+      <div class=\"metric-card\"><span>하락 종목</span><strong>{latest.get('decline', '-')}</strong></div>
+      <div class=\"metric-card\"><span>보합 종목</span><strong>{latest.get('flat', '-')}</strong></div>
+      <div class=\"metric-card\"><span>상위 5개 거래집중</span><strong>{latest.get('top_focus', '-')}%</strong></div>
+    </div>
+  </section>
+"""
 
     body = f"""
 <header class=\"site-header\">
   <div class=\"header-inner\">
     <a class=\"brand\" href=\"/\">{SITE_NAME}</a>
     <nav class=\"site-nav\" aria-label=\"주요 메뉴\">
-      <a href=\"#reports\">최근 2주 리포트</a>
+      <a href=\"#reports\">누적 리포트 아카이브</a>
       <a href=\"/privacy.html\">개인정보처리방침</a>
       <a href=\"/terms.html\">이용약관</a>
     </nav>
@@ -240,14 +265,16 @@ def build_index(reports: List[Dict[str, str]]) -> str:
 
 <main class=\"app\">
   <section class=\"hero\">
-    <p class=\"kicker\">KOREA STOCK BLOG</p>
-    <h1>매일 한국 주식 상승 30 / 하락 30 분석</h1>
-    <p class=\"desc\">최근 2주(최근 10거래일) 장마감 데이터를 기준으로, 하루에 1페이지씩 요약 리포트를 제공합니다.</p>
-    <p class=\"meta-line\">페이지 구성: 일자별 상승 30 · 하락 30 · 거래 집중도 · 해석 요약</p>
+    <p class=\"kicker\">EQUITY RESEARCH NOTE</p>
+    <h1>한국 주식 일일 모멘텀 아카이브</h1>
+    <p class=\"desc\">장마감 데이터를 기반으로 KOSPI/KOSDAQ 상승 상위 30, 하락 상위 30을 매일 축적합니다. 과거 리포트는 삭제되지 않고 누적 보관됩니다.</p>
+    <p class=\"meta-line\">누적 리포트 수: {len(sorted_reports)}개 · 최신 업데이트: {dt.date.today().strftime('%Y-%m-%d')}</p>
   </section>
 
+  {latest_box}
+
   <section id=\"reports\" class=\"panel\">
-    <h2>최근 2주 일자별 페이지</h2>
+    <h2>누적 일자별 리포트</h2>
     <div class=\"cards\">
       {''.join(cards)}
     </div>
@@ -297,27 +324,88 @@ def build_sitemap(report_paths: List[str]) -> str:
     return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n" + "\n".join(rows) + "\n</urlset>\n"
 
 
+def load_existing_meta() -> Dict[str, Dict[str, str]]:
+    if not REPORT_META_FILE.exists():
+        return {}
+
+    try:
+        raw = json.loads(REPORT_META_FILE.read_text(encoding="utf-8"))
+        if isinstance(raw, dict):
+            return raw
+    except Exception:
+        pass
+    return {}
+
+
+def discover_report_dates() -> List[str]:
+    dates = []
+    for f in REPORT_DIR.glob("*.html"):
+        m = re.fullmatch(r"(\d{4}-\d{2}-\d{2})\.html", f.name)
+        if m:
+            dates.append(m.group(1))
+    return sorted(set(dates))
+
+
+def compact_meta(record: Dict[str, str]) -> Dict[str, str]:
+    return {
+        "date": record.get("date", "-"),
+        "path": record.get("path", ""),
+        "strong": record.get("strong", "-"),
+        "weak": record.get("weak", "-"),
+        "advance": record.get("advance", "-"),
+        "decline": record.get("decline", "-"),
+        "flat": record.get("flat", "-"),
+        "top_focus": record.get("top_focus", "-"),
+    }
+
+
 def main() -> None:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    for old in REPORT_DIR.glob("*.html"):
-        old.unlink()
+    report_meta = load_existing_meta()
 
     today = dt.date.today()
     start = today - dt.timedelta(days=20)
     biz_days = stock.get_previous_business_days(fromdate=start, todate=today)
     target_days = biz_days[-10:]
 
-    reports: List[Dict[str, str]] = []
-
     for i, day in enumerate(target_days):
         prev_day = target_days[i - 1] if i > 0 else None
         next_day = target_days[i + 1] if i + 1 < len(target_days) else None
         report = build_day_report(day, i + 1, len(target_days), prev_day, next_day)
         (REPORT_DIR / f"{report['date']}.html").write_text(report["html"], encoding="utf-8")
-        reports.append(report)
+        report_meta[report["date"]] = {
+            "date": report["date"],
+            "path": report["path"],
+            "strong": report["strong"],
+            "weak": report["weak"],
+            "advance": report["advance"],
+            "decline": report["decline"],
+            "flat": report["flat"],
+            "top_focus": report["top_focus"],
+        }
+
+    # 누락된 메타는 최소 정보로 보완
+    for d in discover_report_dates():
+        if d not in report_meta:
+            report_meta[d] = {
+                "date": d,
+                "path": f"reports/{d}.html",
+                "strong": "-",
+                "weak": "-",
+                "advance": "-",
+                "decline": "-",
+                "flat": "-",
+                "top_focus": "-",
+            }
+
+    reports = [compact_meta(report_meta[d]) for d in sorted(report_meta.keys())]
 
     INDEX_FILE.write_text(build_index(reports), encoding="utf-8")
     SITEMAP_FILE.write_text(build_sitemap([r["path"] for r in reports]), encoding="utf-8")
+    REPORT_META_FILE.write_text(
+        json.dumps({r["date"]: r for r in reports}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
     print("generated", len(reports), "daily report pages")
     print("days", ", ".join(r["date"] for r in reports))
