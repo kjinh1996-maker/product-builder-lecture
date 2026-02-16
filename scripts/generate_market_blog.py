@@ -408,15 +408,6 @@ def build_day_report(
   </section>
 
   <section class=\"panel\">
-    <h2>데일리 해석</h2>
-    <ul class=\"policy-list\">
-      <li>당일 등락률은 장마감 기준이며 실시간 변동과 다를 수 있습니다.</li>
-      <li>상승/하락 종목은 시장 전체 흐름과 개별 이슈의 영향을 동시에 받습니다.</li>
-      <li>본 자료는 투자 권유가 아닌 정보 제공용 요약입니다.</li>
-    </ul>
-  </section>
-
-  <section class=\"panel\">
     <h2>상승 종목 구체 분석 + 관련 뉴스</h2>
     <div class=\"insight-grid\">
       {gainers_deep}
