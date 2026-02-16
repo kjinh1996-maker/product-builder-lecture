@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-adsense-account" content="ca-pub-6025469498161210" />
-    <title>로또 번호 추첨기</title>
+    <meta
+      name="description"
+      content="로또 번호 생성 원리, 확률 정보, 책임 있는 이용 가이드까지 제공하는 로또 6/45 정보형 추첨 도구"
+    />
+    <title>로또 번호 추첨기 | 확률 가이드와 책임 있는 이용 안내</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,24 +23,117 @@
     ></script>
   </head>
   <body>
-    <main class="app">
-      <p class="kicker">K-Lotto 6/45</p>
-      <h1>로또 번호 추첨기</h1>
-      <p class="desc">1부터 45까지 중복 없이 6개 번호를 자동으로 뽑습니다.</p>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#top">K-Lotto Insight</a>
+        <nav class="site-nav" aria-label="주요 메뉴">
+          <a href="#draw">번호 추첨</a>
+          <a href="#guide">이용 가이드</a>
+          <a href="#faq">자주 묻는 질문</a>
+          <a href="#policy">운영 정책</a>
+          <a href="#contact">제휴 문의</a>
+        </nav>
+      </div>
+    </header>
 
-      <section class="board" aria-live="polite">
-        <div id="numbers" class="numbers"></div>
+    <main id="top" class="app">
+      <section class="hero">
+        <p class="kicker">K-Lotto 6/45</p>
+        <h1>로또 번호 추첨기</h1>
+        <p class="desc">
+          번호 생성 기능만 제공하지 않습니다. 번호 생성 원리, 확률의 의미, 책임 있는 이용 방법까지 한 페이지에서
+          확인할 수 있도록 구성했습니다.
+        </p>
       </section>
 
-      <div class="actions">
-        <button id="generate-btn" type="button">번호 추첨하기</button>
-      </div>
+      <section id="draw" class="panel" aria-labelledby="draw-title">
+        <h2 id="draw-title">번호 추첨</h2>
+        <p class="section-desc">1부터 45까지 중복 없이 6개 번호를 무작위로 추출하고 오름차순으로 정렬합니다.</p>
+        <div class="board" aria-live="polite">
+          <div id="numbers" class="numbers"></div>
+        </div>
 
-      <p id="round-note" class="note">아직 추첨 전입니다.</p>
+        <div class="actions">
+          <button id="generate-btn" type="button">번호 다시 추첨하기</button>
+        </div>
 
-      <section class="contact-section">
-        <h2>제휴 문의</h2>
-        <p class="contact-desc">간단히 정보 남겨주시면 확인 후 회신드리겠습니다.</p>
+        <p id="round-note" class="note">아직 추첨 전입니다.</p>
+      </section>
+
+      <section id="guide" class="panel" aria-labelledby="guide-title">
+        <h2 id="guide-title">이용 가이드</h2>
+        <div class="copy-grid">
+          <article>
+            <h3>1. 번호 생성 원리</h3>
+            <p>
+              이 도구는 브라우저의 난수 생성 함수를 사용해 1~45 범위에서 중복 없이 6개를 선택합니다. 특정 번호를
+              우대하거나 배제하는 로직은 포함하지 않으며, 매 추첨은 이전 결과와 독립적으로 동작합니다.
+            </p>
+          </article>
+          <article>
+            <h3>2. 확률 이해하기</h3>
+            <p>
+              로또는 확률형 상품입니다. 과거 당첨 번호 패턴을 참고하더라도 미래 결과를 보장하지 않으며, 번호 추천은
+              오락 목적의 보조 도구로만 활용하는 것이 적절합니다.
+            </p>
+          </article>
+          <article>
+            <h3>3. 책임 있는 이용</h3>
+            <p>
+              예산 한도를 사전에 정하고, 손실을 만회하기 위한 추가 구매는 피하세요. 본 사이트는 투자 조언이나 수익
+              보장을 제공하지 않으며, 이용자의 건전한 소비를 최우선 원칙으로 합니다.
+            </p>
+          </article>
+          <article>
+            <h3>4. 정보 업데이트 정책</h3>
+            <p>
+              콘텐츠는 사용자 피드백과 정책 변화에 맞춰 정기 점검합니다. 최신 업데이트 일시는 페이지 하단에 표시하며,
+              정책 문의는 제휴 문의 폼으로 접수받습니다.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="faq" class="panel" aria-labelledby="faq-title">
+        <h2 id="faq-title">자주 묻는 질문</h2>
+        <div class="faq-list">
+          <details>
+            <summary>이 사이트는 당첨을 보장하나요?</summary>
+            <p>아니요. 본 사이트는 무작위 번호 생성과 정보 제공 기능만 제공하며, 어떤 당첨도 보장하지 않습니다.</p>
+          </details>
+          <details>
+            <summary>번호는 어떻게 추출되나요?</summary>
+            <p>1~45 범위의 정수 중 중복 없이 6개를 선택한 뒤 오름차순으로 보여줍니다.</p>
+          </details>
+          <details>
+            <summary>개인정보는 어떤 항목을 수집하나요?</summary>
+            <p>
+              제휴 문의 폼에서 이름, 이메일, 회사명, 문의내용을 수집하며, 문의 대응 목적 외에는 사용하지 않습니다.
+            </p>
+          </details>
+          <details>
+            <summary>광고 노출 기준은 무엇인가요?</summary>
+            <p>
+              콘텐츠 이용 흐름을 방해하지 않는 위치를 우선 고려하며, 오해를 유발하는 클릭 유도 문구는 사용하지
+              않습니다.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section id="policy" class="panel" aria-labelledby="policy-title">
+        <h2 id="policy-title">운영 정책</h2>
+        <ul class="policy-list">
+          <li>콘텐츠 우선 원칙: 광고보다 정보 제공과 사용자 편의성을 우선합니다.</li>
+          <li>투명성 원칙: 확률형 콘텐츠의 특성과 한계를 명확히 고지합니다.</li>
+          <li>개인정보 최소 수집: 제휴 문의 처리에 필요한 항목만 수집합니다.</li>
+          <li>정책 준수: Google AdSense 및 관련 서비스 정책을 준수합니다.</li>
+        </ul>
+      </section>
+
+      <section id="contact" class="panel contact-section" aria-labelledby="contact-title">
+        <h2 id="contact-title">제휴 문의</h2>
+        <p class="contact-desc">운영 제휴, 콘텐츠 협업, 광고 운영 제안은 아래 폼으로 보내주세요.</p>
         <form
           id="partner-form"
           class="partner-form"
@@ -60,6 +157,11 @@
         </form>
         <p id="partner-status" class="partner-status" aria-live="polite"></p>
       </section>
+
+      <footer class="site-footer">
+        <p>운영 원칙: 책임 있는 이용, 정확한 안내, 정책 준수</p>
+        <p id="updated-at">최종 업데이트: -</p>
+      </footer>
     </main>
 
     <script src="main.js"></script>
