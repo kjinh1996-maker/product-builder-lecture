@@ -269,6 +269,59 @@ tbody tr:nth-child(even) {
   line-height: 1.66;
 }
 
+.insight-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.insight-card {
+  border: 1px solid #dbe5f3;
+  border-radius: 12px;
+  background: #f9fbff;
+  padding: 12px;
+}
+
+.insight-card h4 {
+  margin: 0;
+  font-family: 'Merriweather', serif;
+  font-size: 1rem;
+  color: #12284f;
+  line-height: 1.35;
+}
+
+.insight-card h4 span {
+  color: #4b5a75;
+  font-size: 0.9rem;
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+.insight-card p {
+  margin: 8px 0 0;
+  color: #334155;
+  line-height: 1.58;
+}
+
+.news-links {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.news-links li {
+  margin: 4px 0;
+}
+
+.news-links a {
+  color: #0f3f8a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.news-links a:hover {
+  text-decoration: underline;
+}
+
 .site-footer {
   margin-top: 18px;
   border-top: 1px dashed #d5deed;
@@ -288,6 +341,10 @@ tbody tr:nth-child(even) {
   }
 
   .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .insight-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import datetime as dt
+import html
 import json
 import re
+import urllib.parse
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import List, Dict
 
 import pandas as pd
+import requests
 from pykrx import stock
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -18,6 +22,9 @@ REPORT_META_FILE = REPORT_DIR / "report_index.json"
 SITE_NAME = "K-Stock Daily Pulse"
 SITE_URL = "https://pre-visual.web.app"
 ADSENSE_CLIENT = "ca-pub-6025469498161210"
+NEWS_CACHE: Dict[str, List[Dict[str, str]]] = {}
+NEWS_LOOKBACK_DAYS = 3
+NEWS_TOP_LIMIT = 5
 
 
 def fmt_int(v: float) -> str:
@@ -50,6 +57,105 @@ def stock_comment(rate: float, turnover: float, median_turnover: float) -> str:
     return f"{trend} · {flow}"
 
 
+def quant_reason(rate: float, turnover: float, median_turnover: float, direction: str) -> str:
+    if direction == "up":
+        if rate >= 20:
+            momentum = "상한가권 급등"
+        elif rate >= 10:
+            momentum = "강한 상승 탄력"
+        else:
+            momentum = "상승 흐름 유지"
+    else:
+        if rate <= -20:
+            momentum = "급락 구간 진입"
+        elif rate <= -10:
+            momentum = "강한 하락 압력"
+        else:
+            momentum = "하락세 지속"
+
+    if median_turnover > 0 and turnover >= median_turnover * 5:
+        flow = "평균 대비 거래대금이 크게 확대"
+    elif median_turnover > 0 and turnover >= median_turnover * 2:
+        flow = "거래대금이 평균 대비 유의미하게 증가"
+    else:
+        flow = "거래대금은 평균 수준"
+
+    return f"{momentum}. {flow}되어 수급 영향이 크게 반영된 흐름으로 해석됩니다."
+
+
+def fetch_related_news(stock_name: str, report_day: dt.date, direction: str) -> List[Dict[str, str]]:
+    cache_key = f"{stock_name}|{report_day.isoformat()}|{direction}"
+    if cache_key in NEWS_CACHE:
+        return NEWS_CACHE[cache_key]
+
+    after = (report_day - dt.timedelta(days=2)).strftime("%Y-%m-%d")
+    before = (report_day + dt.timedelta(days=1)).strftime("%Y-%m-%d")
+    keyword = "급등 OR 상승 OR 실적 OR 수주 OR 계약" if direction == "up" else "급락 OR 하락 OR 악재 OR 리스크 OR 실적"
+    query = f"\"{stock_name}\" {keyword} after:{after} before:{before}"
+    encoded = urllib.parse.quote(query)
+    url = f"https://news.google.com/rss/search?q={encoded}&hl=ko&gl=KR&ceid=KR:ko"
+
+    try:
+        resp = requests.get(url, timeout=8)
+        resp.raise_for_status()
+        root = ET.fromstring(resp.text)
+    except Exception:
+        NEWS_CACHE[cache_key] = []
+        return []
+
+    items = []
+    for item in root.findall("./channel/item")[:3]:
+        title = item.findtext("title", "").strip()
+        link = item.findtext("link", "").strip()
+        pub_date = item.findtext("pubDate", "").strip()
+        if not title or not link:
+            continue
+        items.append({"title": title, "link": link, "pub_date": pub_date})
+    NEWS_CACHE[cache_key] = items
+    return items
+
+
+def build_deep_cards(
+    sub: pd.DataFrame,
+    direction: str,
+    report_day: dt.date,
+    latest_day: dt.date,
+    median_turnover: float,
+) -> str:
+    cards = []
+    can_search_news = (latest_day - report_day).days <= NEWS_LOOKBACK_DAYS
+    for i, (_, r) in enumerate(sub.head(10).iterrows(), start=1):
+        name = str(r["종목명"])
+        ticker = str(r["티커"])
+        rate = float(r["등락률"])
+        turnover = float(r["거래대금"])
+        news_items = []
+        if can_search_news and i <= NEWS_TOP_LIMIT:
+            news_items = fetch_related_news(name, report_day, direction)
+        base_reason = quant_reason(rate, turnover, median_turnover, direction)
+
+        if news_items:
+            headline = news_items[0]["title"]
+            reason = f"{base_reason} 관련 기사에서는 \"{headline}\" 이슈가 함께 관찰됩니다."
+            links = "".join(
+                f"<li><a href=\"{html.escape(n['link'])}\" target=\"_blank\" rel=\"noopener\">{html.escape(n['title'])}</a></li>"
+                for n in news_items
+            )
+            news_html = f"<ul class=\"news-links\">{links}</ul>"
+        else:
+            reason = f"{base_reason} 현재 자동 수집된 연관 뉴스는 확인되지 않았습니다."
+            news_html = ""
+
+        cards.append(
+            "<article class=\"insight-card\">"
+            f"<h4>{i}. {html.escape(name)} <span>({html.escape(ticker)}, {rate:.2f}%)</span></h4>"
+            f"<p>{html.escape(reason)}</p>"
+            f"{news_html}"
+            "</article>"
+        )
+    return "".join(cards)
+
+
 def enrich(df: pd.DataFrame) -> pd.DataFrame:
     names = {ticker: stock.get_market_ticker_name(ticker) for ticker in df.index}
     out = df.copy()
@@ -80,7 +186,14 @@ def page_template(title: str, description: str, body: str) -> str:
 """
 
 
-def build_day_report(day: dt.date, rank: int, total_days: int, prev_day: dt.date | None, next_day: dt.date | None) -> Dict[str, str]:
+def build_day_report(
+    day: dt.date,
+    latest_day: dt.date,
+    rank: int,
+    total_days: int,
+    prev_day: dt.date | None,
+    next_day: dt.date | None,
+) -> Dict[str, str]:
     d = day.strftime("%Y%m%d")
     label = day.strftime("%Y-%m-%d")
     df_kospi = stock.get_market_ohlcv_by_ticker(d, market="KOSPI")
@@ -99,6 +212,8 @@ def build_day_report(day: dt.date, rank: int, total_days: int, prev_day: dt.date
         sub["코멘트"] = sub.apply(
             lambda r: stock_comment(float(r["등락률"]), float(r["거래대금"]), median_turnover), axis=1
         )
+    gainers_deep = build_deep_cards(gainers, "up", day, latest_day, median_turnover)
+    losers_deep = build_deep_cards(losers, "down", day, latest_day, median_turnover)
 
     adv = int((df["등락률"] > 0).sum())
     dec = int((df["등락률"] < 0).sum())
@@ -188,6 +303,20 @@ def build_day_report(day: dt.date, rank: int, total_days: int, prev_day: dt.date
       <li>상승/하락 종목은 시장 전체 흐름과 개별 이슈의 영향을 동시에 받습니다.</li>
       <li>본 자료는 투자 권유가 아닌 정보 제공용 요약입니다.</li>
     </ul>
+  </section>
+
+  <section class=\"panel\">
+    <h2>상승 종목 구체 분석 + 관련 뉴스</h2>
+    <div class=\"insight-grid\">
+      {gainers_deep}
+    </div>
+  </section>
+
+  <section class=\"panel\">
+    <h2>하락 종목 구체 분석 + 관련 뉴스</h2>
+    <div class=\"insight-grid\">
+      {losers_deep}
+    </div>
   </section>
 
   <footer class=\"site-footer\">
@@ -371,7 +500,8 @@ def main() -> None:
     for i, day in enumerate(target_days):
         prev_day = target_days[i - 1] if i > 0 else None
         next_day = target_days[i + 1] if i + 1 < len(target_days) else None
-        report = build_day_report(day, i + 1, len(target_days), prev_day, next_day)
+        latest_day = target_days[-1]
+        report = build_day_report(day, latest_day, i + 1, len(target_days), prev_day, next_day)
         (REPORT_DIR / f"{report['date']}.html").write_text(report["html"], encoding="utf-8")
         report_meta[report["date"]] = {
             "date": report["date"],
