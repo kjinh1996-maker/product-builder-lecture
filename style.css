@@ -136,6 +136,10 @@ h1 {
   color: #16294d;
 }
 
+.comments-panel {
+  background: #fcfdff;
+}
+
 .metrics-panel {
   background: linear-gradient(180deg, #f8fbff, #f4f8ff);
 }

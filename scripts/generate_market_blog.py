@@ -421,6 +421,20 @@ def build_day_report(
     </div>
   </section>
 
+  <section class=\"panel comments-panel\">
+    <h2>댓글</h2>
+    <p class=\"section-desc\">리포트에 대한 의견을 자유롭게 남겨주세요. (GitHub 로그인 필요)</p>
+    <script
+      src=\"https://utteranc.es/client.js\"
+      repo=\"kjinh1996-maker/product-builder-lecture\"
+      issue-term=\"pathname\"
+      label=\"discussion\"
+      theme=\"preferred-color-scheme\"
+      crossorigin=\"anonymous\"
+      async
+    ></script>
+  </section>
+
   <footer class=\"site-footer\">
     <p>데이터 출처: KRX 일별 시세(수집 시점 기준)</p>
     <p>면책: 본 페이지는 투자 자문이 아닙니다.</p>
