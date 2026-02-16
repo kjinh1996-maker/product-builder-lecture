@@ -1,63 +1,48 @@
-class LottoNumbers extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-        this.numbers = [];
-    }
+const numbersEl = document.getElementById('numbers');
+const generateBtn = document.getElementById('generate-btn');
+const roundNoteEl = document.getElementById('round-note');
 
-    connectedCallback() {
-        this.render();
-    }
+let drawCount = 0;
 
-    generateNumbers() {
-        this.numbers = [];
-        const min = 1;
-        const max = 45;
-        while (this.numbers.length < 6) {
-            const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-            if (!this.numbers.includes(randomNumber)) {
-                this.numbers.push(randomNumber);
-            }
-        }
-        this.numbers.sort((a, b) => a - b);
-        this.render();
-    }
+function pickLottoNumbers() {
+  const picked = new Set();
 
-    render() {
-        this.shadowRoot.innerHTML = `
-            <style>
-                :host {
-                    display: flex;
-                    justify-content: center;
-                    gap: 15px;
-                    margin: 30px 0;
-                }
-                .number {
-                    width: 60px;
-                    height: 60px;
-                    background-color: white;
-                    color: #333;
-                    border-radius: 50%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    font-size: 1.8rem;
-                    font-weight: bold;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-                }
-            </style>
-        `;
-        this.numbers.forEach(number => {
-            const numberDiv = document.createElement('div');
-            numberDiv.classList.add('number');
-            numberDiv.textContent = number;
-            this.shadowRoot.appendChild(numberDiv);
-        });
-    }
+  while (picked.size < 6) {
+    const n = Math.floor(Math.random() * 45) + 1;
+    picked.add(n);
+  }
+
+  return [...picked].sort((a, b) => a - b);
 }
 
-customElements.define('lotto-numbers', LottoNumbers);
+function numberColorClass(n) {
+  if (n <= 10) return 'ball-yellow';
+  if (n <= 20) return 'ball-blue';
+  if (n <= 30) return 'ball-red';
+  if (n <= 40) return 'ball-gray';
+  return 'ball-green';
+}
 
-document.getElementById('generate-btn').addEventListener('click', () => {
-    document.querySelector('lotto-numbers').generateNumbers();
-});
+function renderNumbers(nums) {
+  numbersEl.innerHTML = '';
+
+  nums.forEach((num, index) => {
+    const ball = document.createElement('div');
+    ball.className = `ball ${numberColorClass(num)}`;
+    ball.textContent = String(num);
+    ball.style.animationDelay = `${index * 80}ms`;
+    numbersEl.appendChild(ball);
+  });
+}
+
+function runDraw() {
+  const nums = pickLottoNumbers();
+  drawCount += 1;
+
+  renderNumbers(nums);
+  roundNoteEl.textContent = `${drawCount}회차 추첨 결과: ${nums.join(', ')}`;
+}
+
+generateBtn.addEventListener('click', runDraw);
+
+runDraw();
