@@ -98,5 +98,15 @@
     "decline": 1824,
     "flat": 106,
     "top_focus": 1.87
+  },
+  "2026-02-19": {
+    "date": "2026-02-19",
+    "path": "reports/2026-02-19.html",
+    "strong": "유투바이오 (29.99%)",
+    "weak": "모아라이프플러스 (-21.76%)",
+    "advance": 1768,
+    "decline": 804,
+    "flat": 87,
+    "top_focus": 0.52
   }
 }
