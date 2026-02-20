@@ -108,5 +108,15 @@
     "decline": 804,
     "flat": 87,
     "top_focus": 0.52
+  },
+  "2026-02-20": {
+    "date": "2026-02-20",
+    "path": "reports/2026-02-20.html",
+    "strong": "광동제약 (30.00%)",
+    "weak": "제일바이오 (-25.32%)",
+    "advance": 1183,
+    "decline": 1358,
+    "flat": 119,
+    "top_focus": 1.83
   }
 }
