@@ -128,5 +128,15 @@
     "decline": 1141,
     "flat": 97,
     "top_focus": 1.37
+  },
+  "2026-02-24": {
+    "date": "2026-02-24",
+    "path": "reports/2026-02-24.html",
+    "strong": "에이프로젠 (30.00%)",
+    "weak": "비트맥스 (-30.00%)",
+    "advance": 1312,
+    "decline": 1207,
+    "flat": 144,
+    "top_focus": 0.27
   }
 }
