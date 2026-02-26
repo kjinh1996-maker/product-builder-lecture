@@ -148,5 +148,15 @@
     "decline": 1441,
     "flat": 122,
     "top_focus": 0.24
+  },
+  "2026-02-26": {
+    "date": "2026-02-26",
+    "path": "reports/2026-02-26.html",
+    "strong": "인트론바이오 (30.00%)",
+    "weak": "한주에이알티 (-18.02%)",
+    "advance": 674,
+    "decline": 1911,
+    "flat": 82,
+    "top_focus": 0.3
   }
 }
